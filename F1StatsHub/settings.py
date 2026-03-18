@@ -120,8 +120,17 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# WhiteNoise storage to compress and cache static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# WhiteNoise configuration for serverless deployment
+# CompressedStaticFilesStorage works without needing a manifest.json
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+WHITENOISE_USE_FINDERS = True
+
+# Disable DEBUG in production (Vercel)
+import os
+if os.environ.get('VERCEL'):
+    DEBUG = False
+else:
+    DEBUG = True
 
 # Media files setup
 MEDIA_URL = '/media/'

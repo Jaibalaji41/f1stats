@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i5c-l)8h6s@^uphu$-@qajj)5*3xug$dv&*_h=no(c0^22nky*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('VERCEL'):
+if os.environ.get('VERCEL') or os.environ.get('RENDER'):
     DEBUG = False
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', 'now.sh', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -126,9 +126,8 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# WhiteNoise configuration for serverless deployment
-# CompressedStaticFilesStorage works without needing a manifest.json
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# WhiteNoise storage to compress and cache static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_USE_FINDERS = True
 
 # Media files setup

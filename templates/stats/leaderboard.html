@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Standings - F1StatsHub{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5 animate-up">
+    <h1 class="page-header mb-0">Driver Standings</h1>
+    
+    <div class="dropdown shadow-sm rounded bg-white">
+        <button class="btn btn-white dropdown-toggle fw-bold text-uppercase px-4 py-2" style="font-size: 0.9rem;" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort by: <span class="text-danger">{{ sort_by }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" aria-labelledby="sortDropdown">
+            <li><a class="dropdown-item fw-bold text-uppercase py-2 {% if sort_by == 'points' %}bg-light text-danger{% endif %}" href="?sort=points">Points</a></li>
+            <li><a class="dropdown-item fw-bold text-uppercase py-2 {% if sort_by == 'wins' %}bg-light text-danger{% endif %}" href="?sort=wins">Wins</a></li>
+            <li><a class="dropdown-item fw-bold text-uppercase py-2 {% if sort_by == 'podiums' %}bg-light text-danger{% endif %}" href="?sort=podiums">Podiums</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="card shadow-lg border-0 mt-4 animate-up delay-1">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-f1 m-0">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th width="8%" class="text-center">POS</th>
+                        <th width="35%">Driver</th>
+                        <th width="20%">Constructor</th>
+                        <th width="12%" class="text-center">Wins</th>
+                        <th width="12%" class="text-center">Podiums</th>
+                        <th width="15%" class="text-end pe-5">PTS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <td class="text-center fw-bold fs-4 align-middle 
+                            {% if forloop.counter == 1 %}text-warning border-start border-warning border-4
+                            {% elif forloop.counter == 2 %}text-secondary border-start border-secondary border-4
+                            {% elif forloop.counter == 3 %}text-dark border-start border-4
+                            {% else %}text-muted{% endif %}"
+                            {% if forloop.counter == 3 %}style="color: #cd7f32 !important; border-color: #cd7f32 !important;"{% endif %}>
+                            {{ forloop.counter }}
+                        </td>
+                        <td class="align-middle py-3">
+                            <div class="d-flex align-items-center">
+                                <span class="bg-danger text-white rounded px-2 py-1 fs-5 me-3 fw-bold shadow-sm" style="min-width: 40px; text-align: center;">{{ driver.number }}</span>
+                                <div>
+                                    <a href="{% url 'driver_detail' driver.id %}" class="fw-bold text-dark text-decoration-none fs-5 d-block text-uppercase" style="letter-spacing: 0.5px;">{{ driver.name }}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            {% if driver.team %}
+                            <span class="badge-team shadow-sm">{{ driver.team.name }}</span>
+                            {% else %}
+                            <span class="text-muted fw-bold">IND</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center align-middle fw-bold fs-5 text-muted">{{ driver.wins }}</td>
+                        <td class="text-center align-middle fw-bold fs-5 text-muted">{{ driver.podiums }}</td>
+                        <td class="text-end fw-bold align-middle fs-4 pe-5 text-danger">{{ driver.points }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center p-5 text-muted fw-bold fs-4">NO STANDINGS DATA AVAILABLE.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

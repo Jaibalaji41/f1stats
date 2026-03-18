@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}Compare Drivers - F1 Legends Hub{% endblock %}
+
+{% block content %}
+<h1 class="page-header page-title mb-5 animate-up text-center">Compare Legends</h1>
+
+<div class="card bg-dark border-secondary shadow-lg mb-5 animate-up">
+    <div class="card-body p-4" style="background-color: rgba(225, 6, 0, 0.02);">
+        <form method="GET" class="row align-items-end g-3 justify-content-center">
+            <div class="col-md-5">
+                <label class="form-label text-muted font-orbitron fw-bold text-uppercase small">Driver 1</label>
+                <select name="driver1" class="form-select bg-black text-white border-secondary font-orbitron py-3 fs-5" required>
+                    <option value="" disabled {% if not driver1 %}selected{% endif %}>Select First Driver</option>
+                    {% for d in all_drivers %}
+                    <option value="{{ d.id }}" {% if d.id == d1_id %}selected{% endif %}>{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-auto text-center py-2">
+                <span class="fs-4 text-danger font-orbitron fw-bold">VS</span>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label text-muted font-orbitron fw-bold text-uppercase small">Driver 2</label>
+                <select name="driver2" class="form-select bg-black text-white border-secondary font-orbitron py-3 fs-5" required>
+                    <option value="" disabled {% if not driver2 %}selected{% endif %}>Select Second Driver</option>
+                    {% for d in all_drivers %}
+                    <option value="{{ d.id }}" {% if d.id == d2_id %}selected{% endif %}>{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 mt-4 text-center">
+                <button type="submit" class="btn btn-f1 btn-lg font-orbitron px-5 py-3 shadow">COMPARE</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if driver1 and driver2 %}
+<div class="row align-items-center mb-5 animate-up delay-1 justify-content-center">
+    <!-- Driver 1 Header -->
+    <div class="col-md-5 text-center mb-4">
+        <div class="position-relative d-inline-block">
+            {% if driver1.photo %}
+            <img src="{{ driver1.photo.url }}" class="img-fluid rounded-circle shadow-lg mb-3" style="width: 220px; height: 220px; object-fit: cover; border: 4px solid {% if driver1.team %}{{ driver1.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};" alt="{{ driver1.name }}">
+            {% else %}
+            <div class="rounded-circle bg-secondary mx-auto d-flex align-items-center justify-content-center border border-danger mb-3" style="width: 220px; height: 220px; border-width: 4px !important;">
+                <span class="display-3 text-white font-orbitron fw-bold">{{ driver1.number }}</span>
+            </div>
+            {% endif %}
+            <div class="position-absolute bottom-0 end-0 bg-black rounded-circle p-2 shadow" style="border: 2px solid white;">
+                <img src="{{ driver1.flag_url }}" style="width: 30px; height: 20px; object-fit: cover; border-radius: 2px;">
+            </div>
+        </div>
+        <h3 class="driver-name fw-bold text-uppercase mt-2">{{ driver1.name }}</h3>
+        <p class="fw-bold font-orbitron" style="color: {% if driver1.team %}{{ driver1.team.color|default:'#E10600' }}{% else %}#888{% endif %};">{{ driver1.team.name|default:"Independent" }}</p>
+    </div>
+    
+    <div class="col-md-2 text-center align-self-center mb-4">
+        <h1 class="display-3 text-danger font-orbitron fw-bold text-shadow">VS</h1>
+    </div>
+    
+    <!-- Driver 2 Header -->
+    <div class="col-md-5 text-center mb-4">
+        <div class="position-relative d-inline-block">
+            {% if driver2.photo %}
+            <img src="{{ driver2.photo.url }}" class="img-fluid rounded-circle shadow-lg mb-3" style="width: 220px; height: 220px; object-fit: cover; border: 4px solid {% if driver2.team %}{{ driver2.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};" alt="{{ driver2.name }}">
+            {% else %}
+            <div class="rounded-circle bg-secondary mx-auto d-flex align-items-center justify-content-center border border-light mb-3" style="width: 220px; height: 220px; border-width: 4px !important;">
+                <span class="display-3 text-white font-orbitron fw-bold">{{ driver2.number }}</span>
+            </div>
+            {% endif %}
+            <div class="position-absolute bottom-0 end-0 bg-black rounded-circle p-2 shadow" style="border: 2px solid white;">
+                <img src="{{ driver2.flag_url }}" style="width: 30px; height: 20px; object-fit: cover; border-radius: 2px;">
+            </div>
+        </div>
+        <h3 class="driver-name fw-bold text-uppercase mt-2">{{ driver2.name }}</h3>
+        <p class="fw-bold font-orbitron" style="color: {% if driver2.team %}{{ driver2.team.color|default:'#E10600' }}{% else %}#888{% endif %};">{{ driver2.team.name|default:"Independent" }}</p>
+    </div>
+</div>
+
+<div class="row mb-5 animate-up delay-2">
+    <div class="col-md-6 mb-4">
+        <div class="card bg-dark border-secondary p-4 h-100 shadow-lg" style="border-top: 3px solid #E10600 !important;">
+            <h4 class="text-center font-orbitron text-uppercase mb-4 fw-bold small text-muted">Performance Radar</h4>
+            <canvas id="radarChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card bg-dark border-secondary p-4 h-100 shadow-lg" style="border-top: 3px solid #E10600 !important;">
+            <h4 class="text-center font-orbitron text-uppercase mb-4 fw-bold small text-muted">Key Career Totals</h4>
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-dark border-secondary shadow-lg animate-up delay-3 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-f1 m-0 text-center">
+            <thead class="bg-black text-white font-orbitron border-bottom border-danger">
+                <tr>
+                    <th width="40%" class="fs-5 text-end" style="color: {% if driver1.team %}{{ driver1.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};">{{ driver1.name }}</th>
+                    <th width="20%" class="fs-6 text-muted">STATISTIC</th>
+                    <th width="40%" class="fs-5 text-start" style="color: {% if driver2.team %}{{ driver2.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};">{{ driver2.name }}</th>
+                </tr>
+            </thead>
+            <tbody class="font-orbitron fs-5">
+                <tr>
+                    <td class="text-end py-3 {% if driver1.championships > driver2.championships %}text-danger fw-bold{% endif %}">{{ driver1.championships }}</td>
+                    <td class="text-muted small align-middle" style="font-size: 0.7rem;">CHAMPIONSHIPS</td>
+                    <td class="text-start py-3 {% if driver2.championships > driver1.championships %}text-danger fw-bold{% endif %}">{{ driver2.championships }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end py-3 {% if driver1.wins > driver2.wins %}text-danger fw-bold{% endif %}">{{ driver1.wins }}</td>
+                    <td class="text-muted small align-middle" style="font-size: 0.7rem;">RACE WINS</td>
+                    <td class="text-start py-3 {% if driver2.wins > driver1.wins %}text-danger fw-bold{% endif %}">{{ driver2.wins }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end py-3 {% if driver1.podiums > driver2.podiums %}text-danger fw-bold{% endif %}">{{ driver1.podiums }}</td>
+                    <td class="text-muted small align-middle" style="font-size: 0.7rem;">PODIUMS</td>
+                    <td class="text-start py-3 {% if driver2.podiums > driver1.podiums %}text-danger fw-bold{% endif %}">{{ driver2.podiums }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end py-3 {% if driver1.fastest_laps > driver2.fastest_laps %}text-danger fw-bold{% endif %}">{{ driver1.fastest_laps }}</td>
+                    <td class="text-muted small align-middle" style="font-size: 0.7rem;">FASTEST LAPS</td>
+                    <td class="text-start py-3 {% if driver2.fastest_laps > driver1.fastest_laps %}text-danger fw-bold{% endif %}">{{ driver2.fastest_laps }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end py-3 {% if driver1.career_points > driver2.career_points %}text-danger fw-bold{% endif %}">{{ driver1.career_points }}</td>
+                    <td class="text-muted small align-middle" style="font-size: 0.7rem;">CAREER POINTS</td>
+                    <td class="text-start py-3 {% if driver2.career_points > driver1.career_points %}text-danger fw-bold{% endif %}">{{ driver2.career_points }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if driver1 and driver2 %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Chart.defaults.color = '#aaaaaa';
+        Chart.defaults.font.family = 'Orbitron';
+        
+        const d1Color = '{% if driver1.team %}{{ driver1.team.color|default:"#E10600" }}{% else %}#E10600{% endif %}';
+        const d2Color = '{% if driver2.team %}{{ driver2.team.color|default:"#FFFFFF" }}{% else %}#FFFFFF{% endif %}';
+        
+        // Radar Chart elements
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        const radarData = {
+            labels: ['Wins', 'Podiums', 'Titles', 'F.Laps', 'Points/10'],
+            datasets: [{
+                label: '{{ driver1.name }}',
+                data: [{{ driver1.wins }}, {{ driver1.podiums }}, {{ driver1.championships }}, {{ driver1.fastest_laps }}, {{ driver1.career_points }} / 10],
+                backgroundColor: d1Color + '33', // 20% opacity
+                borderColor: d1Color,
+                pointBackgroundColor: d1Color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: d1Color
+            }, {
+                label: '{{ driver2.name }}',
+                data: [{{ driver2.wins }}, {{ driver2.podiums }}, {{ driver2.championships }}, {{ driver2.fastest_laps }}, {{ driver2.career_points }} / 10],
+                backgroundColor: d2Color + '33', 
+                borderColor: d2Color,
+                pointBackgroundColor: d2Color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: d2Color
+            }]
+        };
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: radarData,
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255,255,255,0.05)' },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        pointLabels: { color: '#ffffff', font: { size: 12 } },
+                        ticks: { display: false }
+                    }
+                },
+                elements: { line: { borderWidth: 3 } }
+            }
+        });
+
+        // Bar Chart elements
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Wins', 'Podiums', 'Titles'],
+                datasets: [
+                    {
+                        label: '{{ driver1.name }}',
+                        data: [{{ driver1.wins }}, {{ driver1.podiums }}, {{ driver1.championships }}],
+                        backgroundColor: d1Color,
+                    },
+                    {
+                        label: '{{ driver2.name }}',
+                        data: [{{ driver2.wins }}, {{ driver2.podiums }}, {{ driver2.championships }}],
+                        backgroundColor: d2Color,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#ffffff', font: { size: 10 } } },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.03)' },
+                        ticks: { color: '#888' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.03)' },
+                        ticks: { color: '#ffffff', font: { size: 12 } }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endif %}
+{% endblock %}

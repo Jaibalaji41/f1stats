@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teams - F1 Legends Hub{% endblock %}
+
+{% block hero %}
+<section class="hero-section mb-5 animate-up text-start shadow-lg">
+    <div class="gradient-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <h1 class="hero-title fw-bold" style="font-size: 4.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);">THE CONSTRUCTORS</h1>
+        <p class="lead mt-3 mb-4 font-montserrat w-50" style="font-size: 1.2rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);">Explore the iconic teams that shaped the history of Formula 1, from legendary champions to modern powerhouses.</p>
+        <a href="#teams" class="btn btn-f1 btn-lg shadow-lg">BROWSE TEAMS</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<h2 id="teams" class="page-header section-title animate-up">Historical & Current Teams</h2>
+
+<div class="row">
+    {% for team in teams %}
+    <div class="col-lg-4 col-md-6 col-12 mb-5 animate-up delay-{{ forloop.counter|default_if_none:'1'|slice:':1' }}">
+        <div class="card team-card h-100" style="--team-color: {{ team.color|default:'#E10600' }};">
+            
+            <div class="team-logo-container">
+                {% if team.logo %}
+                <img src="{{ team.logo.url }}" class="team-logo" alt="{{ team.name }} logo">
+                {% else %}
+                <img src="{% static team.static_logo_url %}" class="team-logo" alt="{{ team.name }} logo">
+                {% endif %}
+            </div>
+            
+            <div class="card-body px-4 pt-4 pb-0 text-white">
+                <div class="text-center border-bottom pb-4 mb-3" style="border-color: #222 !important;">
+                    <h3 class="card-title fw-bold m-0 fs-3">{{ team.name }}</h3>
+                </div>
+                
+                <ul class="list-group list-group-flush mb-4 fs-6">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-3" style="border-color: #222 !important;">
+                        <span class="text-muted text-uppercase fw-bold d-flex align-items-center" style="font-size: 0.8rem; letter-spacing: 1px;">
+                            <i class="fas fa-map-marker-alt me-2"></i> Base
+                        </span>
+                        <div class="text-end d-flex align-items-center gap-2">
+                            <span class="fw-bold fs-6">{{ team.country }}</span>
+                            <img src="{{ team.flag_url }}" class="driver-flag" alt="{{ team.country }}">
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-3" style="border-color: #222 !important;">
+                        <span class="text-muted text-uppercase fw-bold d-flex align-items-center" style="font-size: 0.8rem; letter-spacing: 1px;">
+                            <i class="fas fa-trophy text-warning me-2"></i> World Championships
+                        </span>
+                        <span class="badge rounded px-3 py-2 fs-5 font-orbitron shadow-sm" style="background-color: {{ team.color|default:'#E10600' }}; color: {% if team.color == '#FFFFFF' or team.color == '#CEFF00' %}#000{% else %}#FFF{% endif %};">{{ team.championships }}</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0 text-center">
+                <a href="{% url 'team_detail' team.id %}" class="btn w-100 font-orbitron fw-bold letter-spacing-1 btn-hover-glow" style="background-color: transparent; border: 2px solid {{ team.color|default:'#E10600' }}; color: white;">VIEW DRIVERS</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5 shadow-sm rounded border border-secondary animate-up" style="background-color: #111111;">
+        <h4 class="text-muted fw-bold m-0 p-5 font-orbitron">NO TEAMS FOUND</h4>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

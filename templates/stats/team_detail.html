@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Team Profile - {{ team.name }}{% endblock %}
+
+{% block content %}
+<div class="row mt-5 mb-5 animate-up">
+    <!-- Team Left Summary -->
+    <div class="col-lg-4 col-md-5">
+        <div class="card team-card border-0 shadow-lg mb-4 rounded-4 overflow-hidden position-relative" style="--team-color: {{ team.color|default:'#E10600' }};">
+            
+            <div class="team-logo-wrapper" style="height: 350px; background-color: rgba(255,255,255,0.02); display: flex; justify-content: center; align-items: center; padding: 40px;">
+                {% if team.logo %}
+                <img src="{{ team.logo.url }}" class="img-fluid team-logo" style="max-height: 250px; width: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));" alt="{{ team.name }} logo">
+                {% else %}
+                <img src="{% static team.static_logo_url %}" class="img-fluid team-logo" style="max-height: 250px; width: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));" alt="{{ team.name }} logo">
+                {% endif %}
+            </div>
+            
+            <div class="card-body bg-dark text-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h2 class="card-title fw-bold mb-0 text-uppercase font-orbitron" style="letter-spacing: 1.5px;">{{ team.name }}</h2>
+                    <img src="{{ team.flag_url }}" class="driver-flag shadow" alt="{{ team.country }}">
+                </div>
+            </div>
+            
+            <ul class="list-group list-group-flush border-top border-4" style="border-color: {{ team.color|default:'#E10600' }} !important;">
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Constructor</span>
+                    <strong class="text-end font-orbitron">{{ team.name }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Base</span>
+                    <strong class="text-end font-orbitron">{{ team.country }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Team Principal</span>
+                    <strong class="text-end font-orbitron">{{ team.team_principal }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Championships</span>
+                    <strong class="text-end text-danger fs-4 font-orbitron">{{ team.championships }}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Team Drivers Section -->
+    <div class="col-lg-8 col-md-7 ps-md-4 animate-up delay-1">
+        
+        <h2 class="page-header section-title mb-4">Historical & Current Drivers</h2>
+        
+        <div class="row">
+            {% for driver in drivers %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-sm border-secondary bg-dark animate-up" style="border-left: 5px solid {{ team.color|default:'#E10600' }} !important;">
+                    <div class="d-flex p-3">
+                        <div class="position-relative me-3" style="width: 100px; height: 100px;">
+                            {% if driver.photo %}
+                            <img src="{{ driver.photo.url }}" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid {{ team.color|default:'#E10600' }};" alt="{{ driver.name }}">
+                            {% else %}
+                            <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle text-white fw-bold font-orbitron fs-3 shadow" style="width: 100px; height: 100px;">{{ driver.number }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex-grow-1 align-self-center">
+                            <h5 class="fw-bold mb-1 driver-name text-uppercase">{{ driver.name }}</h5>
+                            <div class="d-flex justify-content-between align-items-center w-100 mb-2">
+                                <span class="badge px-2 font-orbitron" style="background-color: {{ team.color|default:'#E10600' }}; color: {% if team.color == '#FFFFFF' or team.color == '#CEFF00' %}#000{% else %}#FFF{% endif %};">{{ driver.number|default:"#" }}</span>
+                                <img src="{{ driver.flag_url }}" style="height: 15px; border-radius: 2px;">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between small text-muted text-uppercase font-orbitron w-100" style="font-size: 0.7rem;">
+                                <div><span class="text-white fw-bold">{{ driver.wins }}</span> WINS</div>
+                                <div><span class="text-white fw-bold">{{ driver.podiums }}</span> POD</div>
+                                <div><strong class="text-danger">{{ driver.championships }}</strong> TITLES</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-top border-secondary p-0 text-center">
+                        <a href="{% url 'driver_detail' driver.id %}" class="btn w-100 py-2 border-0 fw-bold font-orbitron btn-hover-glow" style="color: white; background-color: rgba(225, 6, 0, 0.1);">VIEW PROFILE</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 py-5 text-center bg-dark border border-secondary rounded shadow-sm">
+                <h4 class="text-muted font-orbitron m-0 p-5">NO DRIVERS ASSIGNED TO THIS TEAM</h4>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

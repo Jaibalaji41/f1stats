@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Recent Races - F1 Legends Hub{% endblock %}
+
+{% block content %}
+<h1 class="page-header section-title mb-5 animate-up text-center">RECENT RACE RESULTS</h1>
+
+<div class="row justify-content-center">
+    {% for race in races %}
+    <div class="col-lg-10 mb-5 animate-up delay-{{ forloop.counter|default_if_none:'1'|slice:':1' }}">
+        <div class="card bg-dark border-secondary shadow-lg overflow-hidden" style="border-left: 5px solid #E10600 !important; transition: transform 0.3s ease;">
+            <div class="card-header bg-black text-white p-4 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1 fw-bold font-orbitron text-uppercase" style="letter-spacing: 1px;">{{ race.race_name }}</h3>
+                    <p class="mb-0 text-danger fw-bold font-orbitron small"><i class="fas fa-calendar-alt me-2"></i>{{ race.race_date|date:"F d, Y" }} <span class="text-muted mx-2">|</span> <i class="fas fa-map-marker-alt me-2 text-white"></i>{{ race.circuit }}, {{ race.country }}</p>
+                </div>
+                <div>
+                    <img src="https://flagcdn.com/w80/{% if race.country == 'Great Britain' %}gb{% elif race.country == 'United States' %}us{% elif race.country == 'Netherlands' %}nl{% elif race.country == 'Italy' %}it{% elif race.country == 'Spain' %}es{% elif race.country == 'Japan' %}jp{% elif race.country == 'Bahrain' %}bh{% elif race.country == 'Saudi Arabia' %}sa{% elif race.country == 'Australia' %}au{% elif race.country == 'Monaco' %}mc{% elif race.country == 'Canada' %}ca{% elif race.country == 'Austria' %}at{% elif race.country == 'Hungary' %}hu{% elif race.country == 'Belgium' %}be{% elif race.country == 'Singapore' %}sg{% elif race.country == 'Mexico' %}mx{% elif race.country == 'Brazil' %}br{% elif race.country == 'Abu Dhabi' or race.country == 'UAE' %}ae{% elif race.country == 'Qatar' %}qa{% elif race.country == 'China' %}cn{% else %}un{% endif %}.png" class="shadow-sm border border-secondary" style="height: 40px; border-radius: 4px;" alt="{{ race.country }}">
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-f1 m-0 text-center">
+                    <thead class="bg-dark text-muted font-orbitron">
+                        <tr>
+                            <th width="10%">POS</th>
+                            <th width="30%" class="text-start">DRIVER</th>
+                            <th width="25%">CONSTRUCTOR</th>
+                            <th width="15%">POINTS</th>
+                            <th width="20%">TIME / STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="font-orbitron fs-6">
+                        {% for pos in race.positions.all|dictsort:"position" %}
+                        <tr class="hover-row">
+                            <td class="fw-bold 
+                                {% if pos.position == 1 %}text-warning
+                                {% elif pos.position == 2 %}text-light
+                                {% elif pos.position == 3 %}text-bronze
+                                {% else %}text-muted{% endif %}
+                            " style="{% if pos.position == 3 %}color: #cd7f32;{% endif %}">{{ pos.position }}</td>
+                            <td class="text-start fw-bold"><a href="{% url 'driver_detail' pos.driver.id %}" class="text-white text-decoration-none" style="transition: color 0.2s;">{{ pos.driver.name }}</a></td>
+                            <td>
+                                {% if pos.team %}
+                                <span class="badge-team" style="border: 1px solid {{ pos.team.color|default:'#444' }}; color: {{ pos.team.color|default:'#FFF' }}; background: transparent; padding: 2px 8px; font-size: 0.7rem;">{{ pos.team.name }}</span>
+                                {% else %}
+                                <span class="text-muted">Independent</span>
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold text-danger">{{ pos.points }}</td>
+                            <td class="text-muted small fw-bold text-lowercase">{{ pos.race_time|default:"Finished" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 text-center bg-dark shadow-sm border border-secondary rounded mt-4">
+        <h4 class="text-muted fw-bold font-orbitron mb-3">NO RECENT RACES FOUND</h4>
+        <i class="fas fa-flag-checkered text-muted display-1"></i>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .hover-row:hover { background-color: rgba(225, 6, 0, 0.05) !important; }
+    .hover-row:hover a { color: #E10600 !important; }
+</style>
+{% endblock %}

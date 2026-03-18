@@ -1,0 +1,377 @@
+body.bg-main {
+    background-color: #0A0A0A !important;
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ffffff !important;
+}
+
+h1, h2, h3, h4, h5, .section-title, .page-title, .hero-title {
+    font-family: 'Rajdhani', sans-serif !important;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.hero-title, .section-title, .page-title {
+    font-family: 'Rajdhani', sans-serif !important;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.navbar-logo {
+    font-family: 'Rajdhani', sans-serif !important;
+    letter-spacing: 1px;
+}
+
+.driver-name {
+    font-family: 'Rajdhani', sans-serif !important;
+    color: #E10600 !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.bg-dark-nav {
+    background-color: #000000 !important;
+}
+
+.border-top-danger {
+    border-top: 3px solid #E10600 !important;
+}
+
+.text-danger {
+    color: #E10600 !important;
+}
+.bg-danger {
+    background-color: #E10600 !important;
+}
+.border-danger {
+    border-color: #E10600 !important;
+}
+
+/* Navbar Custom Underline Hover */
+.navbar {
+    border-bottom: 3px solid #E10600;
+}
+
+.custom-nav-link {
+    color: #ffffff !important;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+    letter-spacing: 1.5px;
+}
+
+.custom-nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 50%;
+    background-color: #E10600;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.custom-nav-link:hover {
+    color: #E10600 !important;
+}
+
+.custom-nav-link:hover::after {
+    width: 100%;
+}
+
+.btn-f1 {
+    background-color: #E10600;
+    color: white;
+    border: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 10px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-f1:hover {
+    background-color: #b30500;
+    color: white;
+    box-shadow: 0 0 15px rgba(225, 6, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-hover-glow {
+    transition: all 0.3s ease;
+}
+
+.btn-hover-glow:hover {
+    box-shadow: 0 0 15px currentColor;
+    transform: translateY(-2px);
+}
+
+.hero-section {
+    position: relative;
+    background: linear-gradient(to right, #000000 30%, transparent), url('https://images.unsplash.com/photo-1541480601022-2308c0f02487?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+    background-size: cover;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    border-bottom: 4px solid #E10600;
+}
+
+.gradient-overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(10,10,10,1) 100%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+}
+
+/* Cards */
+.card {
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: #111111;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: #E10600;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+}
+
+/* Dynamic Box Shadow via CSS custom properties */
+/* Team Card Layouts */
+.driver-card-img {
+    height: 300px;
+    object-fit: cover;
+    object-position: top;
+    background: #000;
+    transition: transform 0.5s ease;
+}
+
+.card:hover .driver-card-img {
+    transform: scale(1.08);
+}
+
+.img-container {
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid #333;
+}
+
+.driver-number-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    z-index: 2;
+}
+
+.driver-flag {
+    width: 35px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid #444;
+}
+
+.team-card {
+    border-top: 4px solid var(--team-color, #E10600) !important;
+}
+
+.team-card:hover {
+    border-color: var(--team-color, #E10600) !important;
+    box-shadow: 0 15px 40px var(--team-shadow, rgba(225, 6, 0, 0.4)) !important;
+}
+
+.team-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    background-color: transparent;
+    border-bottom: 2px solid #222;
+    padding: 20px;
+}
+
+.team-logo {
+    max-width: 120px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
+    transition: transform 0.4s ease;
+}
+
+.team-card:hover .team-logo {
+    transform: scale(1.1);
+}
+
+.card-title {
+    color: white;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-weight: 700;
+}
+
+/* Stat Box */
+.stat-box {
+    background: #111111;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+    border-bottom: 3px solid #E10600;
+    border: 1px solid #222;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+    border-color: #E10600;
+    box-shadow: 0 10px 25px rgba(225, 6, 0, 0.3);
+}
+
+.stat-box h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-family: 'Rajdhani', sans-serif !important;
+}
+
+.stat-box p {
+    color: #999;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Tables */
+.table-f1 {
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+    background: #111111;
+}
+
+.table-f1 thead th {
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    padding: 15px;
+    border-bottom: 2px solid #E10600;
+}
+
+.table-f1 tbody td, .table-f1 tbody th {
+    vertical-align: middle;
+    padding: 15px;
+    border-bottom: 1px solid #222;
+    color: #eee;
+}
+
+.table-f1 tbody tr:hover {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.page-header {
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+    font-weight: 900;
+    font-family: 'Rajdhani', sans-serif !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.page-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background-color: #E10600;
+}
+
+.badge-team {
+    background-color: #222;
+    color: white;
+    font-weight: 600;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    border-radius: 4px;
+}
+
+.text-muted {
+    color: #888888 !important;
+}
+
+input.form-control, select.form-select {
+    background-color: #111111 !important;
+    border: 1px solid #333 !important;
+    color: white !important;
+}
+input.form-control:focus, select.form-select:focus {
+    background-color: #1a1a1a !important;
+    border-color: #E10600 !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(225, 6, 0, 0.3) !important;
+}
+input.form-control::placeholder {
+    color: #666 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-up {
+    animation: fadeIn 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+/* Navbar Logo Styling */
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-logo {
+    height: 40px;
+    width: auto;
+}
+
+.site-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Driver Profile - {{ driver.name }}{% endblock %}
+
+{% block content %}
+<div class="row mt-5 mb-5 animate-up">
+    <!-- Driver Left Summary -->
+    <div class="col-lg-4 col-md-5">
+        <div class="card team-card border-0 shadow-lg mb-4 rounded-4 overflow-hidden position-relative" style="--team-color: {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %} !important;">
+            <div class="driver-number-badge shadow-lg font-orbitron" style="font-size: 2rem;">{{ driver.number|default:"F1" }}</div>
+            
+            {% if driver.photo %}
+            <img src="{{ driver.photo.url }}" class="card-img-top img-fluid" style="object-fit: cover; height: 400px; object-position: top; background: #000; transition: transform 0.5s ease;" alt="{{ driver.name }}">
+            {% else %}
+            <div class="d-flex align-items-center justify-content-center bg-black text-white p-5" style="height: 400px;">
+                <span class="display-1 fw-bold font-orbitron text-muted">{{ driver.number|default:"No Photo" }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="card-body bg-dark text-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h3 class="driver-name fw-bold text-uppercase" style="letter-spacing: 1.5px;">{{ driver.name }}</h3>
+                    <img src="{{ driver.flag_url }}" class="driver-flag shadow" alt="{{ driver.nationality }}">
+                </div>
+            </div>
+            
+            <ul class="list-group list-group-flush border-top border-4" style="border-color: {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %} !important;">
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Constructor</span>
+                    <strong class="text-end font-orbitron" style="color: {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %} !important;">{% if driver.team %}{{ driver.team.name }}{% else %}Independent{% endif %}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Nationality</span>
+                    <strong class="text-end font-orbitron">{{ driver.nationality }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Date of Birth</span>
+                    <strong class="text-end font-orbitron">{{ driver.date_of_birth|date:"d M Y"|default:"N/A" }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between py-3 fs-5 bg-dark text-white border-secondary">
+                    <span class="text-muted text-uppercase fw-bold font-orbitron" style="font-size: 0.8rem; letter-spacing: 1px;">Championships</span>
+                    <strong class="text-end text-danger fs-4 font-orbitron">{{ driver.championships }}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Stats & Performance Right Content -->
+    <div class="col-lg-8 col-md-7 ps-md-4 animate-up delay-1">
+        
+        <h2 class="page-header section-title mb-4">Career Statistics</h2>
+        
+        <div class="row mb-5 text-center g-3">
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <div class="stat-box h-100 bg-dark text-white border-secondary" style="border-color: #333 !important;">
+                    <h3 class="text-danger font-orbitron">{{ season_stats|length }}</h3>
+                    <p class="font-orbitron">Seasons</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <div class="stat-box h-100 bg-dark text-white border-secondary" style="border-color: #333 !important;">
+                    <h3 class="text-white font-orbitron">{{ driver.wins }}</h3>
+                    <p class="font-orbitron">Wins</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <div class="stat-box h-100 bg-dark text-white border-secondary" style="border-color: #333 !important;">
+                    <h3 class="text-white font-orbitron">{{ driver.podiums }}</h3>
+                    <p class="font-orbitron">Podiums</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <div class="stat-box h-100 bg-dark text-white border-secondary" style="border-color: #333 !important;">
+                    <h3 class="text-danger font-orbitron">{{ driver.career_points }}</h3>
+                    <p class="font-orbitron">Total Pts</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="fw-bold mb-4 border-bottom pb-2 text-uppercase d-inline-block section-title" style="letter-spacing: 1.5px; color:#E10600; border-color: #E10600 !important;">Historical Performance</h3>
+        
+        <div class="table-responsive shadow-lg rounded-3">
+            <table class="table table-f1 m-0">
+                <thead class="bg-black text-white border-bottom border-danger">
+                    <tr>
+                        <th width="15%">Year</th>
+                        <th width="25%">Constructor</th>
+                        <th width="12%" class="text-center">Races</th>
+                        <th width="12%" class="text-center">Wins</th>
+                        <th width="12%" class="text-center">Podiums</th>
+                        <th width="12%" class="text-center">Points</th>
+                        <th width="12%" class="text-center">Pos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in season_stats %}
+                    <tr class="font-orbitron">
+                        <td class="fw-bold fs-6 align-middle text-danger">{{ stat.year }}</td>
+                        <td class="align-middle">
+                            {% if stat.team %}
+                            <span class="badge-team fw-bold" style="background-color: {{ stat.team.color|default:'#333' }}; color: {% if stat.team.color == '#FFFFFF' or stat.team.color == '#CEFF00' %}#000{% else %}#FFF{% endif %};">{{ stat.team.name }}</span>
+                            {% else %}
+                            <span class="text-muted">Independent</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center align-middle">{{ stat.races }}</td>
+                        <td class="text-center align-middle">{{ stat.wins }}</td>
+                        <td class="text-center align-middle">{{ stat.podiums }}</td>
+                        <td class="text-center align-middle fw-bold text-white">{{ stat.points }}</td>
+                        <td class="align-middle text-center">
+                            {% if stat.championship_position == 1 %}
+                            <span class="bg-warning text-dark px-2 py-1 rounded fw-bold shadow-sm d-inline-block"><i class="fas fa-trophy"></i> 1</span>
+                            {% elif stat.championship_position == 2 %}
+                            <span class="bg-light text-dark px-2 py-1 rounded fw-bold shadow-sm d-inline-block">2</span>
+                            {% elif stat.championship_position == 3 %}
+                            <span class="px-2 py-1 rounded text-white fw-bold shadow-sm d-inline-block" style="background-color: #cd7f32;">3</span>
+                            {% else %}
+                            <span class="px-2 py-1 fw-bold text-muted">{{ stat.championship_position }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center p-5 text-muted bg-dark border-secondary">
+                            <h5 class="fw-bold m-0 text-uppercase font-orbitron">NO SEASON STATISTICS AVAILABLE</h5>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

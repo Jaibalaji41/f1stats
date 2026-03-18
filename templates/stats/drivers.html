@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Drivers - F1 Legends Hub{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5 animate-up">
+    <h1 class="page-header section-title mb-0">LEGENDARY DRIVERS</h1>
+    
+    <form class="d-flex bg-dark p-2 rounded shadow-sm border border-secondary" method="GET">
+        <select name="sort" class="form-select border-0 bg-black text-white me-2 font-orbitron" style="width: auto; font-size: 0.85rem;">
+            <option value="wins" {% if sort_by == 'wins' %}selected{% endif %}>Sort by Wins</option>
+            <option value="points" {% if sort_by == 'points' %}selected{% endif %}>Sort by Points</option>
+        </select>
+        
+        <select name="team" class="form-select border-0 bg-black text-white me-2 font-orbitron text-uppercase" style="width: auto; font-size: 0.85rem;">
+            <option value="">All Teams</option>
+            {% for team in teams %}
+            <option value="{{ team.id }}" {% if team_filter == team.id|stringformat:"s" %}selected{% endif %}>{{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <input class="form-control border-0 bg-black text-white me-2 font-orbitron" type="search" name="search" placeholder="DRIVER NAME" value="{{ search_query }}">
+        <button class="btn btn-f1 px-4 font-orbitron" type="submit"><i class="fas fa-search"></i> FILTER</button>
+    </form>
+</div>
+
+<div class="row">
+    {% for driver in drivers %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-5 animate-up delay-{{ forloop.counter|default_if_none:'1'|slice:':1' }}">
+        <div class="card team-card h-100 shadow-lg" style="--team-color: {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};">
+            <div class="img-container" style="border-bottom: 3px solid {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %};">
+                <span class="driver-number-badge shadow">{{ driver.number|default:"#" }}</span>
+                {% if driver.photo %}
+                <img src="{{ driver.photo.url }}" class="card-img-top driver-card-img" alt="{{ driver.name }}">
+                {% else %}
+                <div class="driver-card-img d-flex align-items-center justify-content-center bg-black text-white">
+                    <span class="display-3 fw-bold font-orbitron text-muted">{{ driver.number|default:"F1" }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-body bg-dark text-white p-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h5 class="card-title mb-0 text-truncate driver-name" style="max-width: 80%; font-size: 1.1rem;">{{ driver.name }}</h5>
+                    <img src="{{ driver.flag_url }}" class="driver-flag shadow-sm" alt="{{ driver.nationality }}">
+                </div>
+                <p class="small mb-3 fw-bold text-uppercase font-orbitron" style="color: {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#888{% endif %} !important; font-size: 0.75rem;">
+                    {% if driver.team %}
+                    {{ driver.team.name }}
+                    {% else %}
+                    Independent / Retired
+                    {% endif %}
+                </p>
+                
+                <div class="d-flex justify-content-between text-center mt-3 border-top border-secondary pt-3 pb-2 font-orbitron" style="background-color: rgba(255,255,255,0.02); border-radius: 4px;">
+                    <div>
+                        <span class="d-block fw-bold fs-6">{{ driver.wins }}</span>
+                        <small class="text-muted text-uppercase" style="font-size: 0.6rem;">Wins</small>
+                    </div>
+                    <div>
+                        <span class="d-block fw-bold fs-6">{{ driver.podiums }}</span>
+                        <small class="text-muted text-uppercase" style="font-size: 0.6rem;">Podiums</small>
+                    </div>
+                    <div>
+                        <span class="d-block fw-bold fs-6">{{ driver.career_points }}</span>
+                        <small class="text-muted text-uppercase" style="font-size: 0.6rem;">Points</small>
+                    </div>
+                    <div>
+                        <span class="d-block fw-bold text-danger fs-6">{{ driver.championships }}</span>
+                        <small class="text-danger fw-bold text-uppercase" style="font-size: 0.6rem;">Titles</small>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <a href="{% url 'driver_detail' driver.id %}" class="btn btn-hover-glow w-100 font-orbitron fw-bold pb-2 pt-2 px-0" style="font-size: 0.8rem; letter-spacing: 1.5px; border: 1px solid {% if driver.team %}{{ driver.team.color|default:'#E10600' }}{% else %}#E10600{% endif %}; color: white; background-color: transparent;">VIEW PROFILE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 text-center bg-dark border border-secondary rounded shadow-lg">
+        <h4 class="text-muted fw-bold font-orbitron p-3">NO DRIVERS FOUND</h4>
+        <p class="text-muted font-montserrat">Adjust your search parameters and try again.</p>
+        <a href="{% url 'drivers_list' %}" class="btn btn-outline-light font-orbitron mt-3">RESET FILTERS</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

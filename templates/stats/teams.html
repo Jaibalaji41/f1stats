@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Teams - F1StatsHub{% endblock %}
+
+{% block content %}
+<h1 class="page-header mb-5 animate-up">Constructors</h1>
+
+<div class="row">
+    {% for team in teams %}
+    <div class="col-lg-4 col-md-6 mb-5 animate-up delay-{{ forloop.counter|default_if_none:'1'|slice:':1' }}">
+        <div class="card h-100 shadow-lg border-0">
+            <div class="bg-light border-bottom d-flex align-items-center justify-content-center" style="height: 220px; padding: 20px;">
+                {% if team.logo %}
+                <img src="{{ team.logo.url }}" class="img-fluid" style="max-height: 140px; object-fit: contain;" alt="{{ team.name }}">
+                {% else %}
+                <h2 class="text-muted fw-bold text-uppercase">{{ team.name }} Logo</h2>
+                {% endif %}
+            </div>
+            
+            <div class="card-body px-4 pt-4 pb-0">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <h3 class="card-title fw-bold m-0">{{ team.name }}</h3>
+                    <img src="{{ team.flag_url }}" class="driver-flag" alt="{{ team.country }}">
+                </div>
+                
+                <ul class="list-group list-group-flush mb-4 fs-6">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-3">
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 0.8rem; letter-spacing: 1px;">Base</span>
+                        <span class="fw-bold">{{ team.country }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-3">
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 0.8rem; letter-spacing: 1px;">Team Principal</span>
+                        <span class="fw-bold fs-5">{{ team.team_principal }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent py-3 border-bottom-0">
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 0.8rem; letter-spacing: 1px;">World Championships</span>
+                        <span class="badge bg-danger rounded-pill px-3 py-2 fs-5 shadow-sm">{{ team.championships }}</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
+                {% if team.drivers.all %}
+                <h6 class="text-muted text-uppercase mb-3 small fw-bold" style="letter-spacing: 1px;">Current Drivers</h6>
+                <div class="d-grid gap-2">
+                    {% for driver in team.drivers.all %}
+                    <a href="{% url 'driver_detail' driver.id %}" class="btn btn-outline-dark btn-sm text-start fw-bold py-2 fs-6">
+                        <span class="text-danger me-2">{{ driver.number }}</span> {{ driver.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5 bg-white shadow-sm rounded animate-up">
+        <h4 class="text-muted fw-bold m-0 p-5">NO TEAMS FOUND</h4>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
